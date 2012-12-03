@@ -1,52 +1,41 @@
 jobdistributErl
 ===============
-## Moscow
-### Must
-#### Have makefile to install and get dependencies
-Get couchbeam, couchDB
-#### Connect to couchDB
-#### Read, correctly formatted(possibly mocked), couchDB document
-#### Update couchDB document
-#### Claim job
-#### Pick job winner
-#### Report status
-#### Create job*
-#### Execute job(s) defined in couchDB document
-
-### Should
-#### Abort jobs
-#### Hanlde crashes
-Restarts, honour commitments or back out
-#### Have configure file
-Dynamic numb workers
-#### Handle work retries
-
-### Could
-#### Have alternative jobs
-#### Configurable roles
-Master/slave nodes, take overs
 
 ## Must
 #### M1
+Have makefile which installs Tier one (no couchDB or couchBeam)
 #### M2
+Create Job and execute job on same node
 #### M3
+Connect with couchDB
 #### M4
+Work distributed (connected with couchDB), create and 
+execute job on some node
 #### M5
+Install with dependencies
 #### M6
 #### M7
 #### M8
 ## Should 
 #### S1
+Have config file, read on startup
 #### S2
+Have config file, read dynamically
 #### S3
+Handle crashes
 #### S4
+Abort jobs
 #### S5
+Retry failed jobs
 #### S6
 #### S7
 #### S8
 ## Could
 #### C1
+Configurable nodes, master node, slave node with different
+responsibilities
 #### C2
+Handle crashing master, slave takeover
 #### C3
 #### C4
 #### C5
@@ -62,60 +51,3 @@ Master/slave nodes, take overs
 #### W6
 #### W7
 #### W8
-
-
-# Timeplan
-## Week 1
-### Must
-#### Have makefile to install and get dependencies
-Get couchbeam, couchDB
-#### Read, correctly formatted(possibly mocked), couchDB document
-#### Update couchDB document
-
-### Should
-#### Have configure file
-
-###Could
-
-###Would
-
-## Week 2
-### Musts
-#### Connect to couchDB
-#### Claim job
-#### Report status
-
-### Should
-
-###Could
-
-###Would
-
-## Week 3
-###Must
-#### Pick job winner
-#### Execute job(s) defined in couchDB document
-#### Create job*
-
-###Should
-#### Handle work retries
-
-###Could
-#### Have alternative jobs
-
-###Would
-
-## Week 4 
-###Must
-
-###Should
-#### Abort jobs
-#### Hanlde crashes
-Restarts, honour commitments or back out
-
-###Could
-#### Configurable roles
-Master/slave nodes, take overs
-
-###Would
->>>>>>> d5ef7134c92cb2f7db909bf5b2ecebd7f9785ee9
