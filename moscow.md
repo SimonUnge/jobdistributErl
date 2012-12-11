@@ -5,7 +5,7 @@ jobdistributErl
 #### M1
 Have makefile which installs Tier one (no couchDB or couchBeam)
 #### M2
-Create Job and execute job on same node
+Create Job and execute job on same node(ETS or CouchDB web)
 #### M3
 Connect with couchDB
 #### M4
@@ -31,5 +31,5 @@ Configurable nodes, master node, slave node with different
 responsibilities
 #### C2
 Handle crashing master, slave takeover
-
 ## Would
+Create job interface 

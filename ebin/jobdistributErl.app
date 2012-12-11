@@ -1,0 +1,9 @@
+{application,jobdistributErl,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{jobdistributErl_app,[]}},
+              {env,[]},
+              {modules,[jb_workmanager,jobdistributErl_app,
+                        jobdistributErl_sup,worker]}]}.
