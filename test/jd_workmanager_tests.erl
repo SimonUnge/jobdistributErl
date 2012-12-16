@@ -18,13 +18,13 @@ extract_job_test() ->
 give_job_to_worker_and_get_updated_executioner_test() ->
     application:start(jobdistributErl),
     Job = #job{do = "echo hello"},
-    ResultJob = jd_workmanager:give_job_to_worker(Job),
+    ResultJob = jd_workmanager:create_executing_worker(Job),
     ?assert(ResultJob#job.executioner =/= undefined).
 
 give_job_to_worker_and_get_executioner_pid_test() ->
     application:start(jobdistributErl),
     Job = #job{do = "echo hello"},
-    ResultJob = jd_workmanager:give_job_to_worker(Job),
+    ResultJob = jd_workmanager:create_executing_worker(Job),
     ?assertEqual(true, is_pid(ResultJob#job.executioner)).
 
 get_job_doc_and_return_some_job_executioner_info_test() -> 

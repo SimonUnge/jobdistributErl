@@ -9,7 +9,7 @@
 
 %% Internals
 -export([extract_job/1
-         ,give_job_to_worker/1
+         ,create_executing_worker/1
         ]).
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -38,7 +38,7 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({job,JobDoc}, _From, State) ->
-    JobWithExecutioner = give_job_to_worker(extract_job(JobDoc)),
+    JobWithExecutioner = create_executing_worker(extract_job(JobDoc)),
     Reply = JobDoc#job_document{job = JobWithExecutioner},
     {reply, Reply, State}.
 
@@ -65,5 +65,6 @@ code_change(_OldVsn, State, _Extra) ->
 extract_job(JobDoc) ->
     JobDoc#job_document.job.
 
-give_job_to_worker(Job) ->
-    Job#job{executioner = whatever}.
+create_executing_worker(Job) ->
+    WorkerPid = spawn(worker, execute_job, [Job]),
+    Job#job{executioner = WorkerPid}.
