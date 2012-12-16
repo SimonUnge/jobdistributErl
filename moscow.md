@@ -5,9 +5,17 @@ jobdistributErl
 #### M1
 Have makefile which installs Tier one (no couchDB or couchBeam)
 #### M2
-Create Job and execute job on same node(ETS or CouchDB web)
+WM receive Job and execute job
+Do job regardless, no claims or checks. Receive a job document containing just one job.
+Get job doc
+Extract job
+Spawn worker
+Give worker job
+Get result
+Return
 #### M3
 Connect with couchDB
+With an interface
 #### M4
 Work distributed (connected with couchDB), create and 
 execute job on some node

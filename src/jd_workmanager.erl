@@ -1,12 +1,16 @@
--module(jb_workmanager).
-
+-module(jd_workmanager).
+-include("include/jobdist.hrl").
 -behaviour(gen_server).
 
 %% API
 -export([start_link/0
-
+         ,get_job/1
         ]).
 
+%% Internals
+-export([extract_job/1
+         ,give_job_to_worker/1
+        ]).
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
@@ -23,6 +27,8 @@
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
+get_job(JobDoc) ->
+    gen_server:call(?MODULE,{job,JobDoc}).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -31,11 +37,10 @@ start_link() ->
 init([]) ->
     {ok, #state{}}.
 
-
-handle_call(_Request, _From, State) ->
-    Reply = ok,
+handle_call({job,JobDoc}, _From, State) ->
+    JobWithExecutioner = give_job_to_worker(extract_job(JobDoc)),
+    Reply = JobDoc#job_document{job = JobWithExecutioner},
     {reply, Reply, State}.
-
 
 handle_cast(_Msg, State) ->
     {noreply, State}.
@@ -57,3 +62,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 
 
+extract_job(JobDoc) ->
+    JobDoc#job_document.job.
+
+give_job_to_worker(Job) ->
+    Job#job{executioner = whatever}.

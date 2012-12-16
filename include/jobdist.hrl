@@ -1,10 +1,10 @@
-
 -record(job, {
-          target :: string(),
-          do :: string()
+          target :: string()
+          ,do :: string()
+          ,executioner :: string()
          }).
 -record(job_document, {
-          creator :: string(),
-          step :: integer(),
-          job_list :: [#job{}]
+          creator :: string()
+          ,job_status
+          ,job :: #job{}
          }).

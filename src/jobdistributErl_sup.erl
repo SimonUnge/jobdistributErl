@@ -24,5 +24,5 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, [?CHILD(jb_workmanager,worker)]} }.
+    {ok, { {one_for_one, 5, 10}, [?CHILD(jd_workmanager,worker)]} }.
 
