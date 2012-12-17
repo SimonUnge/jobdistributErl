@@ -38,8 +38,7 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({job,JobDoc}, _From, State) ->
-    JobWithExecutioner = create_executing_worker(extract_job(JobDoc)),
-    Reply = JobDoc#job_document{job = JobWithExecutioner},
+    Reply = create_executing_worker(JobDoc),
     {reply, Reply, State}.
 
 handle_cast(_Msg, State) ->
@@ -65,6 +64,7 @@ code_change(_OldVsn, State, _Extra) ->
 extract_job(JobDoc) ->
     JobDoc#job_document.job.
 
-create_executing_worker(Job) ->
-    WorkerPid = spawn(worker, execute_job, [Job]),
-    Job#job{executioner = WorkerPid}.
+create_executing_worker(JobDoc) ->
+    JobDo = jobdocumenthandler:extract_do(JobDoc),
+    Executioner = spawn(worker, execute_job, [JobDo]),
+    jobdocumenthandler:set_executioner(JobDoc, Executioner).

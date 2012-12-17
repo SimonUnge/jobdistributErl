@@ -5,9 +5,8 @@
         ]).
 -record(result,{status, output = ""}).
 
-execute_job(Job) ->
-    Do = Job#job.do,
-    JobPort = open_port({spawn, Do}, [exit_status]),
+execute_job(JobDo) ->
+    JobPort = open_port({spawn, JobDo}, [exit_status]),
     Result = get_job_result(JobPort, #result{}),
     return_result(Result).
 
