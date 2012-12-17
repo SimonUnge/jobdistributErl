@@ -20,9 +20,15 @@ get_job_result(JobPort, Result) ->
     end.
 
 return_result(Result) ->
-    case Result#result.status of
+    StatusCode = Result#result.status,
+    Output = Result#result.output,
+    Status = determin_if_status_is_ok(StatusCode),
+    {Status, StatusCode, Output}.
+
+determin_if_status_is_ok(StatusCode) ->
+    case StatusCode of
         0 ->
-            {ok, Result#result.status, Result#result.output};
-        Status when is_integer(Status) -> 
-            {error, Status, Result#result.output}
+            ok;
+        _N ->
+            error
     end.
