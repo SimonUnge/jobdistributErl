@@ -5,5 +5,6 @@
               {applications,[kernel,stdlib]},
               {mod,{jobdistributErl_app,[]}},
               {env,[]},
-              {modules,[jd_decode,jd_workmanager,jobdistributErl_app,
-                        jobdistributErl_sup,jobdocumenthandler,worker]}]}.
+              {modules,[jd_workmanager,jobdistributErl_app,
+                        jobdistributErl_sup,jobdoc,jobdocumenthandler,
+                        worker]}]}.
