@@ -7,22 +7,22 @@ return_empty_job_doc_template_test() ->
 
 get_id_test() ->
     JD = job_template(),
-    ?assertEqual(null, jobdoc:get_id(JD)).
+    ?assertEqual(<<>>, jobdoc:get_id(JD)).
 
 get_job_test() ->
     JD = job_template(),
-    Job = {[{<<"do">>,null},
-         {<<"executioner">>,null}
+    Job = {[{<<"do">>,<<>>},
+         {<<"executioner">>,<<>>}
         ]},
     ?assertEqual(Job, jobdoc:get_job(JD)).
 
 get_job_do_test() ->
     JD = job_template(),
-    ?assertEqual(null, jobdoc:get_job_do(JD)).
+    ?assertEqual(<<>>, jobdoc:get_job_do(JD)).
 
 get_job_executioner_test() ->
     JD = job_template(),
-    ?assertEqual(null, jobdoc:get_job_executioner(JD)).
+    ?assertEqual(<<>>, jobdoc:get_job_executioner(JD)).
 
 set_job_executioner_test() ->
     JD = job_template(),
@@ -45,11 +45,11 @@ set_id_test() ->
 
 %%%
 job_template() ->
-    {[{<<"_id">>,null},
-      {<<"_rev">>,null},
+    {[{<<"_id">>,<<>>},
+      {<<"_rev">>,<<>>},
       {<<"job">>,
-       {[{<<"do">>,null},
-         {<<"executioner">>,null}
+       {[{<<"do">>,<<>>},
+         {<<"executioner">>,<<>>}
         ]}
       }
      ]}.

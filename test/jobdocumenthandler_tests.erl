@@ -9,13 +9,14 @@ extract_job_test() ->
 
 extract_job_do_test() ->
     JobDoc = jobdoc:set_job_do(<<"echo hello">>, jobdoc:empty()),
-    ?assertEqual(<<"echo hello">>, jobdocumenthandler:extract_do(JobDoc)).
+    ?assertEqual("echo hello", jobdocumenthandler:extract_do(JobDoc)).
 
 extract_job_executioner_test() ->
     JobDoc = jobdoc:set_job_executioner(<<"worker_pid">>, jobdoc:empty()),
-    ?assertEqual(<<"worker_pid">>, jobdocumenthandler:extract_executioner(JobDoc)).
+    ?assertEqual("worker_pid", jobdocumenthandler:extract_executioner(JobDoc)).
 
 set_job_executioner_test() ->
     JobDoc = jobdoc:empty(),
-    NewJobDoc = jobdocumenthandler:set_executioner(JobDoc, <<"worker_pid">>),
-    ?assertEqual(jobdocumenthandler:extract_executioner(NewJobDoc), <<"worker_pid">>).
+    WorkerPid = spawn(lists, reverse, [[]]),
+    NewJobDoc = jobdocumenthandler:set_executioner(JobDoc, WorkerPid),
+    ?assertEqual(jobdocumenthandler:extract_executioner(NewJobDoc), pid_to_list(WorkerPid)).

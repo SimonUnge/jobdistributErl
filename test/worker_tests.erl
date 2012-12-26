@@ -13,8 +13,8 @@ perform_echo_good_bye_job_test() ->
     ?assertMatch({ok, StatusCode,"good bye\n"}, worker:execute_job(JobDo)).
 
 perform_non_successfull_job_test() ->
-    JobDo = "ping not_valid_argument",
-    ErrorCode = 2,
+    JobDo = "not_valid_do",
+    ErrorCode = 127,
     PossibleReason = "",
     ?assertMatch({error, ErrorCode, PossibleReason}, worker:execute_job(JobDo)).
 

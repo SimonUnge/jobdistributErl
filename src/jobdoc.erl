@@ -12,11 +12,11 @@
 -define(KEYINDEX,1).
 
 empty() ->
-    {[{<<"_id">>,null},
-      {<<"_rev">>,null},
+    {[{<<"_id">>,<<>>},
+      {<<"_rev">>,<<>>},
       {<<"job">>,
-       {[{<<"do">>,null},
-         {<<"executioner">>,null}
+       {[{<<"do">>,<<>>},
+         {<<"executioner">>,<<>>}
         ]}
       }
      ]}.
