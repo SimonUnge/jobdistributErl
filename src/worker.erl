@@ -1,5 +1,4 @@
 -module(worker).
--include("include/jobdist.hrl").
 -export([
          execute_job/1
         ]).
@@ -22,13 +21,10 @@ get_job_result(JobPort, Result) ->
 return_result(Result) ->
     StatusCode = Result#result.status,
     Output = Result#result.output,
-    Status = determin_if_status_is_ok(StatusCode),
+    Status = determine_if_status_is_ok(StatusCode),
     {Status, StatusCode, Output}.
 
-determin_if_status_is_ok(StatusCode) ->
-    case StatusCode of
-        0 ->
-            ok;
-        _N ->
-            error
-    end.
+determine_if_status_is_ok(0) ->
+    ok;
+determine_if_status_is_ok(_N) ->
+    error.

@@ -1,16 +1,15 @@
 -module(worker_tests).
 -include_lib("eunit/include/eunit.hrl").
--include("include/jobdist.hrl").
 
 perform_echo_hello_job_test() ->
-    JobDo = "echo hello",
+    JobDo = "echo worker_hello_job",
     StatusCode = 0,
-    ?assertMatch({ok, StatusCode, "hello\n"}, worker:execute_job(JobDo)).
+    ?assertMatch({ok, StatusCode, "worker_hello_job\n"}, worker:execute_job(JobDo)).
 
 perform_echo_good_bye_job_test() ->
-    JobDo = "echo good bye",
+    JobDo = "echo worker_goodbye_job",
     StatusCode = 0,
-    ?assertMatch({ok, StatusCode,"good bye\n"}, worker:execute_job(JobDo)).
+    ?assertMatch({ok, StatusCode,"worker_goodbye_job\n"}, worker:execute_job(JobDo)).
 
 perform_non_successfull_job_test() ->
     JobDo = "not_valid_do",
