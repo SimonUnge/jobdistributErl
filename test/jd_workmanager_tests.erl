@@ -1,6 +1,6 @@
 -module(jd_workmanager_tests).
 -include_lib("eunit/include/eunit.hrl").
-
+-define(NODENAME,"foo").
 jd_test_() ->
     {foreach,
      fun setup/0,
@@ -15,7 +15,8 @@ jd_test_() ->
      ]}.
 
 setup() ->
-    application:start(jobdistributErl).
+    application:start(jobdistributErl),
+    jd_workmanager:set_node_name(?NODENAME).
 
 cleanup(_) ->
     application:stop(jobdistributErl).
@@ -35,13 +36,12 @@ get_job_doc_and_return_some_job_executioner_info() ->
     ?assert(jobdoc:get_job_executioner(ResultDoc) =/= null).
 
 claim_job() ->
-    ok = jd_workmanager:set_node_name("foo"),
     ResultJD = jd_workmanager:give_job(jobdoc:empty()),
     ?assertEqual("foo", jobdocumenthandler:extract_claimed_by(ResultJD)).
 
 get_node_name() ->
-    ?assertEqual(undefined, jd_workmanager:get_node_name()).
+    ?assertEqual("foo", jd_workmanager:get_node_name()).
 
 set_node_name() ->
-    ok = jd_workmanager:set_node_name("foo"),
-    ?assertEqual("foo", jd_workmanager:get_node_name()). 
+    ok = jd_workmanager:set_node_name("bar"),
+    ?assertEqual("bar", jd_workmanager:get_node_name()). 

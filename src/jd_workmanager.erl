@@ -44,12 +44,7 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({job,JobDoc}, _From, State) ->
-    Reply = case job_is_claimed(JobDoc) of
-		true ->
-		    create_executing_worker(JobDoc);
-		false ->
-		    claim_job(State#state.node_name, JobDoc)
-	    end,
+    Reply = handle_incoming_jd(JobDoc, State),
     {reply, Reply, State};
 
 handle_call(get_node_name, _From, State) ->
@@ -87,3 +82,11 @@ job_is_claimed(JobDoc) ->
 
 claim_job(Claimer, JobDoc) ->
     jobdocumenthandler:set_claimed_by(Claimer, JobDoc).
+
+handle_incoming_jd(JobDoc, State) ->
+    case job_is_claimed(JobDoc) of
+        true ->
+            create_executing_worker(JobDoc);
+        false ->
+            claim_job(State#state.node_name, JobDoc)
+    end.
