@@ -28,12 +28,12 @@ get_job_doc_and_return_job_doc() ->
 give_job_to_worker_and_get_updated_executioner() ->
     JobDoc = jobdoc:set_job_do(<<"echo jd_give_job_hello">>, jobdoc:empty()),
     ResultJobDoc = jd_workmanager:create_executing_worker(JobDoc),
-    ?assert(jobdocumenthandler:extract_executioner(ResultJobDoc) =/= null).
+    ?assert(jobdocumenthandler:extract_executioner(ResultJobDoc) =/= "").
 
 get_job_doc_and_return_some_job_executioner_info() -> 
-    JobDoc = jobdoc:set_job_do(<<"echo jd_get_job_hello">>, jobdoc:empty()),
+    JobDoc = jobdoc_with_claimer_and_job(),
     ResultDoc = jd_workmanager:give_job(JobDoc),
-    ?assert(jobdoc:get_job_executioner(ResultDoc) =/= null).
+    ?assert(jobdoc:get_job_executioner(ResultDoc) =/= <<>>).
 
 claim_job() ->
     ResultJD = jd_workmanager:give_job(jobdoc:empty()),
@@ -45,3 +45,9 @@ get_node_name() ->
 set_node_name() ->
     ok = jd_workmanager:set_node_name("bar"),
     ?assertEqual("bar", jd_workmanager:get_node_name()). 
+
+%%% Internals
+jobdoc_with_claimer_and_job() ->
+    EmptyJobDoc = jobdoc:empty(),
+    JobDocWithDo =jobdoc:set_job_do(<<"echo jd_get_job_hello">>, EmptyJobDoc),
+    jobdoc:set_job_claimed_by(<<"foo">>, JobDocWithDo).
