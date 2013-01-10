@@ -8,7 +8,7 @@ deps:
 compile:
 	@$(REBAR) compile
 
-test:
+tests:
 	@$(REBAR) skip_deps=true eunit
 
 clean:
