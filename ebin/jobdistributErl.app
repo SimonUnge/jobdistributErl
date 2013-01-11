@@ -7,4 +7,4 @@
               {env,[]},
               {modules,[jd_workmanager,jobdistributErl_app,
                         jobdistributErl_sup,jobdoc,jobdocumenthandler,
-                        worker]}]}.
+                        predicate,worker]}]}.

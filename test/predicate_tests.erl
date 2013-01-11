@@ -3,7 +3,7 @@
 
 empty_predicate_list_test() ->
     PredicateList = [],
-    PredArg = whatever,
+    PredArg = true,
     ?assertEqual({ok, all_passed}, predicate:check(PredicateList, PredArg)).
 
 one_true_predicate_test() ->
