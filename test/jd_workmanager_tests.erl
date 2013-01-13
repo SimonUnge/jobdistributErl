@@ -9,7 +9,7 @@ jd_test_() ->
       fun get_job_doc_and_return_job_doc/0,
       fun give_job_to_worker_and_get_updated_executioner/0,
       fun get_job_doc_and_return_some_job_executioner_info/0,
-      fun claim_job/0,
+      fun claim_unclaimed_job/0,
       fun get_node_name/0,
       fun set_node_name/0
      ]}.
@@ -35,7 +35,7 @@ get_job_doc_and_return_some_job_executioner_info() ->
     ResultDoc = jd_workmanager:give_job(JobDoc),
     ?assert(jobdoc:get_job_executioner(ResultDoc) =/= <<>>).
 
-claim_job() ->
+claim_unclaimed_job() ->
     ResultJD = jd_workmanager:give_job(jobdoc:empty()),
     ?assertEqual("foo", jobdocumenthandler:extract_claimed_by(ResultJD)).
 

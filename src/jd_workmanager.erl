@@ -72,21 +72,35 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%%===================================================================
 
+handle_incoming_jd(JobDoc, State) ->
+    case action_to_take(JobDoc, State) of 
+        claim ->
+            claim_job(State#state.node_name, JobDoc);
+        _ ->
+            create_executing_worker(JobDoc)
+    end.
+
+action_to_take(JobDoc, State) ->
+    ClaimFuns = claim_predicate_funs(),
+    case predicate:check(ClaimFuns, JobDoc) of
+        passed ->
+            claim;
+        error ->
+            error
+    end.
+
+claim_predicate_funs() ->
+    [fun is_not_claimed/1].
+                
+
 create_executing_worker(JobDoc) ->
     JobDo = jobdocumenthandler:extract_do(JobDoc),
     Executioner = spawn(worker, execute_job, [JobDo]),
     jobdocumenthandler:set_executioner(Executioner, JobDoc).
 
-job_is_claimed(JobDoc) ->
-    jobdocumenthandler:extract_claimed_by(JobDoc) =/= "".
+is_not_claimed(JobDoc) ->
+    jobdocumenthandler:extract_claimed_by(JobDoc) =:= "".
 
 claim_job(Claimer, JobDoc) ->
     jobdocumenthandler:set_claimed_by(Claimer, JobDoc).
 
-handle_incoming_jd(JobDoc, State) ->
-    case job_is_claimed(JobDoc) of
-        true ->
-            create_executing_worker(JobDoc);
-        false ->
-            claim_job(State#state.node_name, JobDoc)
-    end.
