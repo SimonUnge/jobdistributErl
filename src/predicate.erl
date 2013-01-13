@@ -5,9 +5,14 @@
 check([], _) ->
     passed;
 check([H | T], PredArg) ->
-    case H(PredArg) of
-        true ->
-            check(T, PredArg);
-        false ->
-            error
-    end.
+    combinator(H(PredArg), {fun check/2, T, PredArg}).
+
+combinator(true, {F,A1,A2}) ->
+    F(A1, A2);
+combinator(false,_) ->
+    error.
+
+
+
+
+
