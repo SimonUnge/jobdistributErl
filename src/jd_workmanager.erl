@@ -73,25 +73,36 @@ code_change(_OldVsn, State, _Extra) ->
 %%%===================================================================
 
 handle_incoming_jd(JobDoc, State) ->
+    io:format(user, "JobDoc: ~p", [JobDoc]),
     case action_to_take(JobDoc, State) of 
         claim ->
             claim_job(State#state.node_name, JobDoc);
+        won ->
+            create_executing_worker(JobDoc);
         _ ->
-            create_executing_worker(JobDoc)
+            JobDoc
     end.
 
 action_to_take(JobDoc, State) ->
     ClaimFuns = claim_predicate_funs(),
+    WonFuns = won_predicate_funs(),
     case predicate:check(ClaimFuns, JobDoc) of
         passed ->
             claim;
         error ->
-            error
+            case predicate:check(WonFuns, JobDoc) of
+                passed ->
+                    won;
+                error ->
+                    error
+            end
     end.
 
 claim_predicate_funs() ->
     [fun is_not_claimed/1].
                 
+won_predicate_funs() ->
+    [fun is_winner/1].
 
 create_executing_worker(JobDoc) ->
     JobDo = jobdocumenthandler:extract_do(JobDoc),
@@ -100,6 +111,9 @@ create_executing_worker(JobDoc) ->
 
 is_not_claimed(JobDoc) ->
     jobdocumenthandler:extract_claimed_by(JobDoc) =:= "".
+
+is_winner(JobDoc) ->
+    jobdocumenthandler:extract_winner(JobDoc) =:= jd_workmanager:get_node_name().
 
 claim_job(Claimer, JobDoc) ->
     jobdocumenthandler:set_claimed_by(Claimer, JobDoc).

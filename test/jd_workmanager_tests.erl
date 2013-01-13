@@ -8,8 +8,8 @@ jd_test_() ->
      [
       fun get_job_doc_and_return_job_doc/0,
       fun give_job_to_worker_and_get_updated_executioner/0,
-      fun get_job_doc_and_return_some_job_executioner_info/0,
       fun claim_unclaimed_job/0,
+      {"Execute won job",fun execute_won_job/0},
       fun get_node_name/0,
       fun set_node_name/0
      ]}.
@@ -30,14 +30,13 @@ give_job_to_worker_and_get_updated_executioner() ->
     ResultJobDoc = jd_workmanager:create_executing_worker(JobDoc),
     ?assert(jobdocumenthandler:extract_executioner(ResultJobDoc) =/= "").
 
-get_job_doc_and_return_some_job_executioner_info() -> 
-    JobDoc = jobdoc_with_claimer_and_job(),
-    ResultDoc = jd_workmanager:give_job(JobDoc),
-    ?assert(jobdoc:get_job_executioner(ResultDoc) =/= <<>>).
-
 claim_unclaimed_job() ->
     ResultJD = jd_workmanager:give_job(jobdoc:empty()),
-    ?assertEqual("foo", jobdocumenthandler:extract_claimed_by(ResultJD)).
+    ?assertEqual(?NODENAME, jobdocumenthandler:extract_claimed_by(ResultJD)).
+
+execute_won_job() ->
+    ResultJD = jd_workmanager:give_job(won_job_doc()),
+    ?assert(jobdocumenthandler:extract_executioner(ResultJD) =/= "").
 
 get_node_name() ->
     ?assertEqual("foo", jd_workmanager:get_node_name()).
@@ -47,7 +46,10 @@ set_node_name() ->
     ?assertEqual("bar", jd_workmanager:get_node_name()). 
 
 %%% Internals
-jobdoc_with_claimer_and_job() ->
+won_job_doc() ->
     EmptyJobDoc = jobdoc:empty(),
-    JobDocWithDo =jobdoc:set_job_do(<<"echo jd_get_job_hello">>, EmptyJobDoc),
-    jobdoc:set_job_claimed_by(<<"foo">>, JobDocWithDo).
+    WithDo = jobdoc:set_job_do(<<"echo won_job_doc">>, EmptyJobDoc),
+    WithClaim = jobdoc:set_job_claimed_by(<<?NODENAME>>, WithDo),
+    WonJobDoc = jobdoc:set_job_winner(<<?NODENAME>>, WithClaim).
+
+
