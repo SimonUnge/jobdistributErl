@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+tput bold
+echo "Checking dependencies..."
+tput setaf 1
+hash rebar 2>/dev/null || { echo >&2 "Can not find rebar, aborting installation."; exit 1; }
+tput setaf 2
+echo "All dependencies found"
+
+tput sgr0
+tput bold
+echo "Compiling Job distributerl"
+tput sgr0
+make all
+
+tput bold
+echo "Running tests"
+tput sgr0
+make tests
+
+tput bold
+echo "Installation completed, have fun."
+tput sgr0
