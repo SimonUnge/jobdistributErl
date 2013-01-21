@@ -1,23 +1,26 @@
 #!/bin/bash
 set -e
-tput bold
-echo "Checking dependencies..."
-tput setaf 1
+green=$(tput setaf 2)
+red=$(tput setaf 1)
+bold=$(tput bold)
+normal=$(tput sgr0)
+
+print_step_status() {
+    local step_length=$(expr length "${1}")
+    let x=40-${step_length}
+
+    printf "%s%${x}s\n" "${1}" "${2}"
+}
+
 hash rebar 2>/dev/null || { echo >&2 "Can not find rebar, aborting installation."; exit 1; }
-tput setaf 2
-echo "All dependencies found"
+print_step_status "Check dependencies" "${green}${bold}DONE${normal}"
 
-tput sgr0
-tput bold
-echo "Compiling Job distributerl"
-tput sgr0
-make all
+make all &> /dev/null
+print_step_status "Compiling" "${green}${bold}DONE${normal}"
 
-tput bold
-echo "Running tests"
-tput sgr0
-make tests
+make tests &> /dev/null
+print_step_status "Tests" "${green}${bold}DONE${normal}"
 
-tput bold
 echo "Installation completed, have fun."
-tput sgr0
+
+
