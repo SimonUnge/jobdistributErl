@@ -4,7 +4,6 @@ green=$(tput setaf 2)
 red=$(tput setaf 1)
 bold=$(tput bold)
 normal=$(tput sgr0)
-cmds_status=0
 
 print_step_status() {
     local step_length=$(expr "${1}" : '.*')
@@ -20,7 +19,6 @@ print_step_status() {
         status="${bold}${green}PASSED${normal}"
     else
         status="${bold}${red}FAILED${normal}"
-        cmds_status=${2} #XXXASK GIANFRANCO ABOUT
     fi
     printf "%s%s%s\n" "${1}" ${dots} "${status}"
 }
@@ -46,19 +44,25 @@ run_function_tests() {
 }
 
 check_installation_status() {
-    if [ ${cmds_status} -eq 0 ]; then
+    if [ ${1} -eq 0 ]; then
         echo "Installation completed, have fun."
     else
         echo "Installation failed, please check logs"
     fi
 }
 
-check_dependencies
+run() {
+    local installation_status
 
-compile
+    for step in check_dependencies \
+                 compile \
+                 run_unit_tests \
+                 run_function_tests
+    do
+        ${step}
+        installation_status=${?}
+    done
+    check_installation_status ${installation_status}
+}
 
-run_unit_tests
-
-run_function_tests
-
-check_installation_status
+run

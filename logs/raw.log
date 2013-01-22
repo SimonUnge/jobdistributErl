@@ -1,0 +1,24 @@
+--- Test run on 2013/01/22 21:00:11 ---
+Converting "/Users/stinaandersson87/simon/programming/erlang/jobdistributErl/." to "/Users/stinaandersson87/simon/programming/erlang/jobdistributErl" and re-inserting with add_patha/1
+
+
+Common Test v1.6.3 starting (cwd is /Users/stinaandersson87/simon/programming/erlang/jobdistributErl)
+
+
+Common Test: Running make in test directories...
+
+CWD set to: "/Users/stinaandersson87/simon/programming/erlang/jobdistributErl/logs/ct_run.test@Stina-Anderssons-MacBook-Pro.local.2013-01-22_21.00.11"
+
+TEST INFO: 1 test(s), 1 case(s) in 1 suite(s)
+
+Testing erlang.jobdistributErl: Starting test, 1 test cases
+
+=INFO REPORT==== 22-Jan-2013::21:00:11 ===
+    application: jobdistributerl
+    exited: stopped
+    type: temporary
+Testing erlang.jobdistributErl: TEST COMPLETE, 1 ok, 0 failed of 1 test cases
+
+Updating /Users/stinaandersson87/simon/programming/erlang/jobdistributErl/logs/index.html... done
+Updating /Users/stinaandersson87/simon/programming/erlang/jobdistributErl/logs/all_runs.html... done
+
