@@ -21,4 +21,6 @@ end_per_group(_, _Config) ->
     ok.
 
 send_job_recv_result(_Config) ->
-    1 = 1.
+    Job = whatever,
+    Result = jd_manager:give_job(Job),
+    Result =/= undefined.

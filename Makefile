@@ -16,4 +16,4 @@ clean:
 	@$(REBAR) clean
 	@rm -r ebin/ || true
 	@rm -r logs/ || true
-	@rm -r test/*.beam || true
+	@rm test/*.beam || true

@@ -1,26 +1,64 @@
 #!/bin/bash
-set -e
+
 green=$(tput setaf 2)
 red=$(tput setaf 1)
 bold=$(tput bold)
 normal=$(tput sgr0)
+cmds_status=0
 
 print_step_status() {
-    local step_length=$(expr length "${1}")
+    local step_length=$(expr "${1}" : '.*')
     let x=40-${step_length}
+    local dots
+    for (( i=0; i<${x}; i++))
+    do
+        dots+="."
+    done
 
-    printf "%s%${x}s\n" "${1}" "${2}"
+    local status
+    if [ ${2} -eq 0 ]; then
+        status="${bold}${green}PASSED${normal}"
+    else
+        status="${bold}${red}FAILED${normal}"
+        cmds_status=${2} #XXXASK GIANFRANCO ABOUT
+    fi
+    printf "%s%s%s\n" "${1}" ${dots} "${status}"
 }
 
-hash rebar 2>/dev/null || { echo >&2 "Can not find rebar, aborting installation."; exit 1; }
-print_step_status "Check dependencies" "${green}${bold}DONE${normal}"
+check_dependencies() {
+    hash rebar 2>/dev/null
+    print_step_status "Check dependencies" $?
+}
 
-make all &> /dev/null
-print_step_status "Compiling" "${green}${bold}DONE${normal}"
+compile() {
+    make all &> /dev/null
+    print_step_status "Compiling" $?
+}
 
-make tests &> /dev/null
-print_step_status "Tests" "${green}${bold}DONE${normal}"
+run_unit_tests() {
+    make eunit &> /dev/null
+    print_step_status "Unit tests" $?
+}
 
-echo "Installation completed, have fun."
+run_function_tests() {
+    make ct &> /dev/null
+    print_step_status "Function tests" $?
+}
 
+check_installation_status() {
+    if [ ${cmds_status} -eq 0 ]; then
+        echo "Installation completed, have fun."
+    else
+        echo "Installation failed, please check logs"
+    fi
+}
 
+check_dependencies
+
+compile
+
+run_unit_tests
+
+run_function_tests
+
+check_installation_status

@@ -1,4 +1,3 @@
-
 -module(jobdistributerl_sup).
 
 -behaviour(supervisor).
@@ -17,6 +16,7 @@
 %% ===================================================================
 
 start_link() ->
+    
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 %% ===================================================================
@@ -24,5 +24,4 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, []} }.
-
+    {ok, {{one_for_one, 5, 10}, [?CHILD(jd_manager,worker)]}}.
