@@ -55,9 +55,9 @@ run() {
     local installation_status
 
     for step in check_dependencies \
-                 compile \
-                 run_unit_tests \
-                 run_function_tests
+                compile \
+                run_unit_tests \
+                run_function_tests
     do
         ${step}
         installation_status=${?}
