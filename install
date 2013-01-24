@@ -4,6 +4,7 @@ green=$(tput setaf 2)
 red=$(tput setaf 1)
 bold=$(tput bold)
 normal=$(tput sgr0)
+export TMPDIR=$(mktemp -d temp)
 
 print_step_status() {
     local step_length=$(expr "${1}" : '.*')
@@ -14,33 +15,49 @@ print_step_status() {
         dots+="."
     done
 
+    printf "%s%s" "${1}" "${dots}"
+    while [ ! -e $TMPDIR/cmd_status ]
+    do
+        printf ""
+    done
+
     local status
-    if [ ${2} -eq 0 ]; then
+    if [ $(cat $TMPDIR/cmd_status) == "s" ]; then
         status="${bold}${green}PASSED${normal}"
     else
         status="${bold}${red}FAILED${normal}"
     fi
-    printf "%s%s%s\n" "${1}" ${dots} "${status}"
+    rm $TMPDIR/cmd_status
+    printf "%s\n" "${status}"
+}
+
+run_cmd() {
+    ${1} &> /dev/null
+    if [ ${?} -eq 0 ]; then
+        echo "s" > $TMPDIR/cmd_status
+    else
+        echo "f" > $TMPDIR/cmd_status
+    fi
 }
 
 check_dependencies() {
-    hash rebar 2>/dev/null
-    print_step_status "Check dependencies" $?
+    run_cmd "hash rebar" &
+    print_step_status "Check dependencies"
 }
 
 compile() {
-    make all &> /dev/null
-    print_step_status "Compiling" $?
+    run_cmd "make all" &
+    print_step_status "Compiling"
 }
 
 run_unit_tests() {
-    make eunit &> /dev/null
-    print_step_status "Unit tests" $?
+    run_cmd "make eunit" &
+    print_step_status "Unit tests"
 }
 
 run_function_tests() {
-    make ct &> /dev/null
-    print_step_status "Function tests" $?
+    run_cmd "make ct" &
+    print_step_status "Function tests"
 }
 
 check_installation_status() {
@@ -66,3 +83,4 @@ run() {
 }
 
 run
+rm -r temp
