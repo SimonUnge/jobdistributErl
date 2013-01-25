@@ -4,31 +4,55 @@ green=$(tput setaf 2)
 red=$(tput setaf 1)
 bold=$(tput bold)
 normal=$(tput sgr0)
-export TMPDIR=$(mktemp -d temp)
+export TMPDIR=$(mktemp -d temp.XXXXXXXX)
 
-print_step_status() {
-    local step_length=$(expr "${1}" : '.*')
-    let x=40-${step_length}
+create_dots() {
     local dots
-    for (( i=0; i<${x}; i++))
+    for (( i=0; i<${1}; i++))
     do
         dots+="."
     done
+    echo ${dots}
+}
 
-    printf "%s%s" "${1}" "${dots}"
+wait_for_command_to_finish() {
     while [ ! -e $TMPDIR/cmd_status ]
     do
         printf ""
     done
+}
 
+check_status_of_command() {
     local status
     if [ $(cat $TMPDIR/cmd_status) == "s" ]; then
         status="${bold}${green}PASSED${normal}"
     else
         status="${bold}${red}FAILED${normal}"
     fi
+    echo ${status}
+}
+
+step_clean_up() {
     rm $TMPDIR/cmd_status
+}
+
+install_clean_up() {
+    rm -r $TMPDIR
+}
+
+print_step_status() {
+    local step_length=$(expr "${1}" : '.*')
+    let number_of_dots_needed=40-${step_length}
+
+    local dots=$(create_dots ${number_of_dots_needed})
+
+    printf "%s%s" "${1}" "${dots}"
+    wait_for_command_to_finish
+
+    local status=$(check_status_of_command)
     printf "%s\n" "${status}"
+
+    step_clean_up
 }
 
 run_cmd() {
@@ -68,7 +92,7 @@ check_installation_status() {
     fi
 }
 
-run() {
+run_install() {
     local installation_status
 
     for step in check_dependencies \
@@ -80,7 +104,6 @@ run() {
         installation_status=${?}
     done
     check_installation_status ${installation_status}
+    install_clean_up 
 }
-
-run
-rm -r temp
+run_install
