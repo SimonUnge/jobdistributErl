@@ -34,7 +34,7 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({job, Job}, _From, State) ->
-    Reply = Job,
+    Reply = jd_manager_lib:handle_job(Job),
     {reply, Reply, State}.
 
 handle_cast(_Msg, State) ->
@@ -49,8 +49,5 @@ terminate(_Reason, _State) ->
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
-%%%===================================================================
-%%% Internal functions
-%%%===================================================================
 
 
