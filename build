@@ -1,0 +1,23 @@
+#!/bin/bash
+
+tar cf payload.tar src/ test/ Makefile install
+
+if test -e "payload.tar"; then
+    gzip payload.tar
+
+    if test -e "payload.tar.gz"; then
+        cat decompress payload.tar.gz > installer
+    else
+        echo "Can not find payload.tar.gz"
+        exit 1
+    fi
+else
+    echo "Can not find payload.tar"
+    exit 1
+fi
+rm "payload.tar.gz"
+
+chmod a+x installer
+
+echo "installer script created"
+exit 0

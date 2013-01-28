@@ -1,0 +1,16 @@
+#!/bin/bash
+tput setaf 3
+echo "      #################################"
+echo "      |  Installing Job distributerl  |"
+echo "      #################################"
+tput sgr0
+
+ARCHIVE=`awk '/^__PROGRAMME__/ {print NR + 1; exit 0; }' $0`
+
+tail -n+$ARCHIVE $0 | tar xzv &>/dev/null
+
+./install
+
+exit 0
+
+__PROGRAMME__
