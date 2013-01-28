@@ -1,6 +1,7 @@
 #!/bin/bash
-
-tar cf payload.tar src/ test/ Makefile install
+cd ..
+tar cf builder/payload.tar src/ test/ Makefile install
+cd builder
 
 if test -e "payload.tar"; then
     gzip payload.tar
