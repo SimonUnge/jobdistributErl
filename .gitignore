@@ -1,5 +1,8 @@
 .eunit
 deps
+logs
+ebin
+builder/installer
 *.o
 *.beam
 *.plt

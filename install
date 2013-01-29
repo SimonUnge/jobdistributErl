@@ -55,13 +55,18 @@ print_step_status() {
     step_clean_up
 }
 
-run_cmd() {
-    ${1} &> /dev/null
-    if [ ${?} -eq 0 ]; then
+write_cmd_status_to_file() {
+    if [ ${1} -eq 0 ]; then
         echo "s" > $TMPDIR/cmd_status
     else
         echo "f" > $TMPDIR/cmd_status
     fi
+}
+
+run_cmd() {
+    local cmd=${1}
+    ${cmd} &> /dev/null
+    write_cmd_status_to_file ${?}
 }
 
 check_dependencies() {
