@@ -3,23 +3,30 @@
 #+AUTHOR: Simon Unge
 
 * Must
-** M1
+** TODO M1
    Receive job and respond ok/error.
+   
    ok -> promise to handle the job
+
    error -> can not handle job
-** M2
+** TODO M2
    Execute job and return result to process giving the job
-** M3
+** TODO M3
    Connect with other twin nodes
-** M4
-   Distribute job. Give job to random connected node
-** M5
+** TODO M4
+   Distribute job.
+   
+   Give job to random connected node
+** TODO M5
    Return result of distributed job to process giving the job.
+   
    The node that received the job is responsible for returning
    the job result to the "giver" regardless on which node ended up
    getting the job.
 * Should
-** S1
-   Distribute job, Give job to connected node based on something.
+** TODO S1
+   Distribute job.
+
+   Give job to connected node based on something.
    Based on i.e workload.
   
