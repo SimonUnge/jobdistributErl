@@ -3,6 +3,11 @@
 #+AUTHOR: Simon Unge
 
 * Must
+** DONE M0
+   Have installation script.
+
+   The script must at least check dependencies, compile status and
+   test status.
 ** TODO M1
    Receive job and respond ok/error.
    
@@ -23,6 +28,7 @@
    The node that received the job is responsible for returning
    the job result to the "giver" regardless on which node ended up
    getting the job.
+   
 * Should
 ** TODO S1
    Distribute job.
