@@ -7,6 +7,7 @@
    Receive job and respond ok/error.
    
    ok -> promise to handle the job
+
    error -> can not handle job
 ** TODO M2
    Execute job and return result to process giving the job
