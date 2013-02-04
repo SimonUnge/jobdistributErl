@@ -7,3 +7,5 @@ builder/installer
 *.beam
 *.plt
 .#*
+*.html
+*~

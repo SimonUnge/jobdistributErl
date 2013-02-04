@@ -12,6 +12,9 @@ eunit:
 	@$(REBAR) skip_deps=true eunit
 ct:
 	@$(REBAR) ct
+dialyze:
+	@dialyzer --src src/*.erl test/*.erl 
+
 clean:
 	@$(REBAR) clean
 	@rm -r ebin/ || true

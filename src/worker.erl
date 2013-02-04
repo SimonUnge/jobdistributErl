@@ -26,5 +26,5 @@ return_result(Result) ->
 
 determine_if_status_is_ok(0) ->
     ok;
-determine_if_status_is_ok(_N) ->
+determine_if_status_is_ok(N) ->
     error.
