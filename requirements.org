@@ -4,18 +4,52 @@
 
 * Must
 ** DONE M0
+   [DONE]
+
    Have installation script.
 
    The script must at least check dependencies, compile status and
    test status.
-** TODO M1
+
+   The script will in the following order check:
+*** Dependencies
+    Check that all required application are in the path etc
+*** Compiling
+    Check that compilation went well
+*** Unit tests
+    Check if all unit tests pass
+*** Function tests
+    Check if all function tests pass
+
+    These steps are independent of each other. If one check fails the other test
+    will be performed anyway. The end result, how ever, should fail.
+** DONE M1
+   [DONE]
+
    Receive job and respond ok/error.
    
-   ok -> promise to handle the job
+   When the job manager is given a job from another process - by calling the interface 
+   function "give_job" - the manager will
+   check if it can perform the job and return.
 
-   error -> can not handle job
+   ok -> promise to handle the job, but not that it will succeed.
+
+   error -> can not handle job at all.
+
 ** TODO M2
-   Execute job and return result to process giving the job
+   Execute job and return result to process giving the job.
+   
+   After the job manager has accepted to perform a job it will note the pid of
+   process that gave the job, and then give the job to a worker.
+   When the job has been completed by the worker the worker will inform the manager
+   that the job has been completed, and give its status. The job manager will check
+   if there is any process waiting for the result, and if yes return the result to that 
+   process, otherwise it will store the result of the job until a process asks for it.
+
+   After a process has given an accepted job to the job manager it can ask to
+   get the result by calling "get_job_status". The job manager will reply with the 
+   job status when the job has completed.
+
 ** TODO M3
    Connect with other twin nodes
 ** TODO M4

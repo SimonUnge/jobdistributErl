@@ -1,7 +1,7 @@
 -module(jd_manager_lib).
--export([handle_job/1]).
+-export([validate_job/1]).
 
-handle_job([]) ->
+validate_job([]) ->
     error;
-handle_job(Job) ->
-    worker:execute_job(Job).
+validate_job(Job) when is_list(Job)->
+    ok.

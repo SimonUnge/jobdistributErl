@@ -34,7 +34,7 @@ init([]) ->
     {ok, #state{}}.
 
 handle_call({job, Job}, _From, State) ->
-    Reply = jd_manager_lib:handle_job(Job),
+    Reply = jd_manager_lib:validate_job(Job),
     {reply, Reply, State}.
 
 handle_cast(_Msg, State) ->
