@@ -23,8 +23,8 @@
 start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
-give_job(Job) ->
-    gen_server:call(?MODULE,{job,Job}).
+give_job({Job, ID}) ->
+    gen_server:call(?MODULE,{job,{Job, ID}}).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -33,8 +33,8 @@ give_job(Job) ->
 init([]) ->
     {ok, #state{}}.
 
-handle_call({job, Job}, _From, State) ->
-    Reply = jd_manager_lib:validate_job(Job),
+handle_call({job, {Job, ID}}, _From, State) ->
+    Reply = jd_manager_lib:validate_job({Job,ID}),
     {reply, Reply, State}.
 
 handle_cast(_Msg, State) ->

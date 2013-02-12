@@ -1,7 +1,7 @@
 -module(jd_manager_lib).
 -export([validate_job/1]).
 
-validate_job([]) ->
+validate_job({[], _}) ->
     error;
-validate_job(Job) when is_list(Job)->
+validate_job({Job, _}) when is_list(Job)->
     ok.

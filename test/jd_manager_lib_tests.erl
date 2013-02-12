@@ -3,9 +3,11 @@
 
 invalidate_empty_job_test() ->
     Job = "",
-    ?assertEqual(error, jd_manager_lib:validate_job(Job)).
+    JobId = whatever,
+    ?assertEqual(error, jd_manager_lib:validate_job({Job, JobId})).
 
 validate_echo_hello_job_test() ->
     Job = "echo hello",
-    ?assertEqual(ok, jd_manager_lib:validate_job(Job)).
+    JobId = whatever,
+    ?assertEqual(ok, jd_manager_lib:validate_job({Job, JobId})).
 
