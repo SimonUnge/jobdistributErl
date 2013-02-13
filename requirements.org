@@ -36,19 +36,21 @@
 
    error -> can not handle job at all.
 
-** TODO M2
+** DONE M2
+   [DONE]
    Execute job and return result to process giving the job.
    
-   After the job manager has accepted to perform a job it will note the pid of
-   process that gave the job, and then give the job to a worker.
+   After the job manager has accepted to perform a job it will give the job to a worker.[DONE]
+   
    When the job has been completed by the worker the worker will inform the manager
-   that the job has been completed, and give its status. The job manager will check
-   if there is any process waiting for the result, and if yes return the result to that 
-   process, otherwise it will store the result of the job until a process asks for it.
+   that the job has been completed, and give the jobs return status. [DONE]
+   
+   The job manager will check if there is any process waiting for the result, and if yes return the result to that 
+   process, otherwise it will store the result of the job until a process asks for it.[DONE]
 
    After a process has given an accepted job to the job manager it can ask to
    get the result by calling "get_job_status". The job manager will reply with the 
-   job status when the job has completed.
+   job status when the job has completed.[DONE]
 
 ** TODO M3
    Connect with other twin nodes

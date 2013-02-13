@@ -1,30 +1,19 @@
 -module(worker).
 -export([
-         execute_job/1
+         execute_job/2
         ]).
--record(result,{status, output = ""}).
 
-execute_job(Job) ->
+execute_job(Job, Id) ->
     JobPort = open_port({spawn, Job}, [exit_status]),
-    Result = get_job_result(JobPort, #result{}),
-    return_result(Result).
+    Result = get_job_result(JobPort),
+    return_result(Result, Id),
+    ok.
 
-get_job_result(JobPort, Result) ->
+get_job_result(JobPort) ->
     receive
         {JobPort, {exit_status, Status}} ->
-            Result#result{status = Status};
-        {JobPort, {data, Output}} ->
-            OldOutput = Result#result.output,
-            get_job_result(JobPort, Result#result{output = OldOutput ++ Output})
+            Status
     end.
 
-return_result(Result) ->
-    StatusCode = Result#result.status,
-    Output = Result#result.output,
-    Status = determine_if_status_is_ok(StatusCode),
-    {Status, StatusCode, Output}.
-
-determine_if_status_is_ok(0) ->
-    ok;
-determine_if_status_is_ok(N) ->
-    error.
+return_result(Result, Id) ->
+    jd_manager:job_result(Result, Id).

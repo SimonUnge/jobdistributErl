@@ -18,6 +18,11 @@ lookup_stored_value_in_db_test() ->
     ets:insert(Db, {key, value}),
     ?assertEqual(value, jd_store:lookup(Db, key)).
 
+lookup_non_existing_value_in_db_test() ->
+    Db = ets:new(temp, []),
+    ets:insert(Db, {key, value}),
+    ?assertEqual([], jd_store:lookup(Db, unknownkey)).
+
 delete_stored_value_in_db_test() ->
     Db = ets:new(temp, []),
     ets:insert(Db, {key, value}),

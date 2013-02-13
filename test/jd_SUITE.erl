@@ -36,7 +36,7 @@ send_job_and_ask_for_result(_Config) ->
     JobId = 1,
     SuccessStaus = 0,
     ok = jd_manager:give_job({Job,1}),
-    SuccessStaus = jd_manager:get_result().
+    SuccessStaus = jd_manager:get_job_result(JobId).
 
 init_per_group(jd, Config) ->
     ok = application:start(jobdistributerl),

@@ -19,8 +19,12 @@ insert(Db, Key, Value) ->
     ets:insert(Db, {Key ,Value}).
 
 lookup(Db, Key) ->
-    [{Key, Value}] = ets:lookup(Db, Key),
-    Value.
+    case ets:lookup(Db, Key) of
+        [{Key, Value}] ->
+            Value;
+        [] ->
+            []
+    end.
 
 delete(Db, key) ->
     ets:delete(Db, key).
