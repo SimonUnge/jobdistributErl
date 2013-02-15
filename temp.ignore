@@ -54,19 +54,25 @@ handle_call({job, {Job, ID}}, _From, State) ->
             end,
     {reply, Reply, State};
 handle_call({get_job_result, JobId}, From, State) ->
+            jd_store:insert(State#state.awaiting_job_status, JobId, From   
     case jd_manager_lib:is_job_executed(State#state.executed_jobs, JobId) of
         false ->
-            jd_store:insert(State#state.awaiting_job_status, JobId, From),
+
             {noreply, State};
         true ->
             Reply = jd_store:lookup(State#state.executed_jobs, JobId),
+            jd_store:delete(State#state.executed_jobs, JobId),
             {reply, Reply, State}
     end.
 
 handle_cast({job_status, {Status, JobId}}, State) ->
+    jd_store:insert(State#state.executed_jobs, JobId, Status),
+    check_for_waiting_give_result().
+
+
     case jd_manager_lib:is_someone_waiting_for_job(State#state.awaiting_job_status, JobId) of
         false ->
-            jd_store:insert(State#state.executed_jobs, JobId, Status);
+    
         true ->
             From = jd_store:lookup(State#state.awaiting_job_status, JobId),
             jd_store:delete(State#state.awaiting_job_status, JobId),

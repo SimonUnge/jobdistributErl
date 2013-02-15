@@ -26,6 +26,6 @@ lookup(Db, Key) ->
             []
     end.
 
-delete(Db, key) ->
-    ets:delete(Db, key).
+delete(Db, Key) ->
+    ets:delete(Db, Key).
     
