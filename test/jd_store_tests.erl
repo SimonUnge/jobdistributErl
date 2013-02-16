@@ -7,12 +7,6 @@ create_executed_jobs_db_test() ->
 create_awaiting_job_status_db() ->
     ?assertEqual(awaiting_job_status, jd_store:create_awaiting_job_status_db()).
 
-insert_into_db_test() ->
-    Db = ets:new(temp, []),
-    Key = key,
-    Value = value,
-    ?assertEqual(true, jd_store:insert(Db, Key, Value)).
-
 lookup_stored_value_in_db_test() ->
     Db = ets:new(temp, []),
     ets:insert(Db, {key, value}),
@@ -22,6 +16,13 @@ lookup_non_existing_value_in_db_test() ->
     Db = ets:new(temp, []),
     ets:insert(Db, {key, value}),
     ?assertEqual([], jd_store:lookup(Db, unknownkey)).
+
+inserted_value_is_in_db_test() ->
+    Db = ets:new(temp, []),
+    Key = foo,
+    Value = bar,
+    jd_store:insert(Db, Key, Value),
+    ?assertEqual(bar, jd_store:lookup(Db, Key)).
 
 delete_stored_value_in_db_test() ->
     Db = ets:new(temp, []),

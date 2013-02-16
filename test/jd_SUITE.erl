@@ -10,18 +10,22 @@
         ]).
 
 all() ->
-    [{group, jd}].
+    [{group, jd_give_job},
+     {group, jd_give_job_recv_status}].
 
 groups() ->
     [
-     {jd, [], [
-               send_empty_job_recv_error,
-               send_echo_job_recv_ok,
-               send_valid_job_and_ask_for_result,
-               send_valid_long_job_and_ask_for_result,
-               send_invalid_job_and_ask_for_result
-              ]
-     }
+     {jd_give_job,
+      [],
+      [send_empty_job_recv_error,
+       send_echo_job_recv_ok
+      ]
+     },
+     {jd_give_job_recv_status,
+      [],
+      [send_valid_job_and_ask_for_result,
+       send_valid_long_job_and_ask_for_result,
+       send_invalid_job_and_ask_for_result]}
     ].
 
 
@@ -55,13 +59,23 @@ send_invalid_job_and_ask_for_result(_Config) ->
     ok = jd_manager:give_job({Job, JobId}),
     0 =/= jd_manager:get_job_result(JobId).
 
-init_per_group(jd, Config) ->
-    ok = application:start(jobdistributerl),
-    Config;
+init_per_group(jd_give_job, Config) ->
+    start_app_return_config(Config);
+init_per_group(jd_give_job_recv_status, Config) ->
+    start_app_return_config(Config);
 init_per_group(_, Config) ->
     Config.
 
-end_per_group(jd, Config) ->
-    ok = application:stop(jobdistributerl);
+end_per_group(jd_give_job, Config) ->
+    stop_app();
+end_per_group(jd_give_job_recv_status, Config) ->
+    stop_app();
 end_per_group(_, _Config) ->
     ok.
+
+start_app_return_config(Config) ->
+    ok = application:start(jobdistributerl),
+    Config.    
+
+stop_app() ->
+    ok = application:stop(jobdistributerl).
