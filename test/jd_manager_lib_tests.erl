@@ -3,12 +3,13 @@
 
 invalidate_empty_job_test() ->
     Job = "",
-    ?assertEqual(error, jd_manager_lib:validate_job(Job)).
+    JobId = whatever,
+    ?assertEqual(error, jd_manager_lib:validate_and_execute_job(Job, JobId)).
 
-validate_echo_hello_job_test() ->
+validate_and_execute_echo_hello_job_test() ->
     Job = "echo hello",
     JobId = whatever,
-    ?assertEqual(ok, jd_manager_lib:validate_job(Job)).
+    ?assertEqual(ok, jd_manager_lib:validate_and_execute_job(Job, JobId)).
 
 give_job_to_spawned_worker_test() ->
     Job = "echo hello",

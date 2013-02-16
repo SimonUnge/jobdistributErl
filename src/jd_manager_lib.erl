@@ -1,15 +1,15 @@
 -module(jd_manager_lib).
 -export([
-         validate_job/1,
+         validate_and_execute_job/2,
          give_job_to_worker/2,
          is_someone_waiting_for_job/2,
          is_job_executed/2
         ]).
 
-validate_job([]) ->
+validate_and_execute_job([], _) ->
     error;
-validate_job(Job) when is_list(Job)->
-    ok.
+validate_and_execute_job(Job, JobId) when is_list(Job)->
+    give_job_to_worker(Job, JobId).
 
 give_job_to_worker(Job, JobId) ->
     spawn(worker, execute_job, [Job, JobId]),

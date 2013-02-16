@@ -44,14 +44,8 @@ init([]) ->
            }
     }.
 
-handle_call({job, {Job, ID}}, _From, State) ->
-    Reply = case jd_manager_lib:validate_job(Job) of
-                ok ->
-                    jd_manager_lib:give_job_to_worker(Job, ID),
-                    ok;
-                error ->
-                    error
-            end,
+handle_call({job, {Job, JobId}}, _From, State) ->
+    Reply = jd_manager_lib:validate_and_execute_job(Job, JobId),
     {reply, Reply, State};
 handle_call({get_job_result, JobId}, From, State) ->
     case jd_manager_lib:is_job_executed(State#state.executed_jobs, JobId) of
