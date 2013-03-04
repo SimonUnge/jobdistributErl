@@ -1,16 +1,18 @@
 -module(job_tests).
 
+-include("inc/job.hrl").
 -include_lib("eunit/include/eunit.hrl").
--include("include/job.hrl").
+
+create_job_with_invalid_commad_test() ->
+    Command = not_a_string,
+    ?assertEqual(error, job:create(Command)).
 
 create_job_test() ->
-    Id = 1,
     Command = "whatever",
-    ?assert(is_record(job:create(Id, Command), job)).
+    ?assert(is_record(job:create(Command), job)).
 
 get_job_id_test() ->
-    Id = 1,
-    ?assertEqual(Id, job:get_id(job())).
+    ?assert(is_integer(job:get_id(job()))).
 
 get_job_command_test() ->
     Command = "whatever",
@@ -26,6 +28,5 @@ set_job_status_test() ->
 
 
 job() ->
-    Id = 1,
     Command = "whatever",
-    job:create(Id, Command).
+    job:create(Command).

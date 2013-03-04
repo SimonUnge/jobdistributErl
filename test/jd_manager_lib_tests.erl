@@ -1,39 +1,37 @@
 -module(jd_manager_lib_tests).
 -include_lib("eunit/include/eunit.hrl").
 
-invalidate_empty_job_test() ->
-    Job = "",
-    JobId = whatever,
-    ?assertEqual(error, jd_manager_lib:validate_and_execute_job(Job, JobId)).
-
-validate_and_execute_echo_hello_job_test() ->
-    Job = "echo hello",
-    JobId = whatever,
-    ?assertEqual(ok, jd_manager_lib:validate_and_execute_job(Job, JobId)).
-
-give_job_to_spawned_worker_test() ->
-    Job = "echo hello",
-    JobId = whatever,
-    ?assertEqual(ok, jd_manager_lib:give_job_to_worker(Job, JobId)).
+execute_echo_hello_job_test() ->
+    Command = "echo hello",
+    JobId = 1,
+    ?assertEqual(ok, jd_manager_lib:handle_job(job:create(JobId, Command))).
 
 someone_is_not_waiting_for_the_job_test() ->
     DbWithAwaiting = ets:new(whatever, []),
-    JobId = 1,
-    ?assertEqual(false, jd_manager_lib:is_someone_waiting_for_job(DbWithAwaiting, JobId)).
+    Id = 1,
+    Command = "whatever",
+    Job = job:create(Id, Command),
+    ?assertEqual(false, jd_manager_lib:is_someone_waiting_for_job(DbWithAwaiting, Job)).
 
 someone_is_waiting_for_the_job_test() ->
     DbWithAwaiting = ets:new(whatever, []),
-    JobId = 1,
-    ets:insert(DbWithAwaiting, {JobId, value}),
-    ?assertEqual(true, jd_manager_lib:is_someone_waiting_for_job(DbWithAwaiting, JobId)).
+    Id = 1,
+    Command = "whatever",
+    Job = job:create(Id, Command),
+    jd_store:insert(DbWithAwaiting, Job),
+    ?assertEqual(true, jd_manager_lib:is_someone_waiting_for_job(DbWithAwaiting, Job)).
 
 job_is_not_executed_test() ->
     DbWithExecJobs = ets:new(whatever, []),
-    JobId = 1,
-    ?assertEqual(false, jd_manager_lib:is_job_executed(DbWithExecJobs, JobId)).
+    Id = 1,
+    Command = "whatever",
+    Job = job:create(Id, Command),
+    ?assertEqual(false, jd_manager_lib:is_job_executed(DbWithExecJobs, Job)).
 
 job_is_executed_test() ->
     DbWithExecJobs = ets:new(whatever, []),
-    JobId = 1,
-    ets:insert(DbWithExecJobs, {JobId, value}),
-    ?assertEqual(true, jd_manager_lib:is_job_executed(DbWithExecJobs, JobId)).
+    Id = 1,
+    Command = "whatever",
+    Job = job:create(Id, Command),
+    jd_store:insert(DbWithExecJobs, Job),
+    ?assertEqual(true, jd_manager_lib:is_job_executed(DbWithExecJobs, Job)).

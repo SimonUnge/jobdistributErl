@@ -8,24 +8,27 @@ create_awaiting_job_status_db() ->
     ?assertEqual(awaiting_job_status, jd_store:create_awaiting_job_status_db()).
 
 lookup_stored_value_in_db_test() ->
-    Db = ets:new(temp, []),
-    ets:insert(Db, {key, value}),
-    ?assertEqual(value, jd_store:lookup(Db, key)).
+    Db = jd_store:create(foo),
+    Id = 1,
+    Command = "whatever",
+    Job = job:create(Id, Command),
+    jd_store:insert(Db, Job),
+    ?assertEqual(Job, jd_store:lookup(Db, Id)).
 
 lookup_non_existing_value_in_db_test() ->
-    Db = ets:new(temp, []),
-    ets:insert(Db, {key, value}),
-    ?assertEqual([], jd_store:lookup(Db, unknownkey)).
-
-inserted_value_is_in_db_test() ->
-    Db = ets:new(temp, []),
-    Key = foo,
-    Value = bar,
-    jd_store:insert(Db, Key, Value),
-    ?assertEqual(bar, jd_store:lookup(Db, Key)).
+    Db = jd_store:create(bar),
+    Id = 1,
+    Command = "whatever",
+    WrongKey = 2,
+    Job = job:create(Id, Command),
+    jd_store:insert(Db, Job),
+    ?assertEqual([], jd_store:lookup(Db, WrongKey)).
 
 delete_stored_value_in_db_test() ->
-    Db = ets:new(temp, []),
-    ets:insert(Db, {key, value}),
-    jd_store:delete(Db, key),
-    ?assertEqual([], ets:lookup(Db, key)).
+    Db = jd_store:create(ball),
+    Id = 1,
+    Command = "whatever",
+    Job = job:create(Id, Command),
+    jd_store:insert(Db, Job),
+    jd_store:delete(Db, Id),
+    ?assertEqual([], jd_store:lookup(Db, Id)).
