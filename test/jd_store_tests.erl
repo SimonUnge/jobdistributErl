@@ -9,26 +9,23 @@ create_awaiting_job_status_db() ->
 
 lookup_stored_value_in_db_test() ->
     Db = jd_store:create(foo),
-    Id = 1,
     Command = "whatever",
-    Job = job:create(Id, Command),
+    Job = job:create(Command),
     jd_store:insert(Db, Job),
-    ?assertEqual(Job, jd_store:lookup(Db, Id)).
+    ?assertEqual(Job, jd_store:lookup(Db, Job)).
 
 lookup_non_existing_value_in_db_test() ->
     Db = jd_store:create(bar),
-    Id = 1,
     Command = "whatever",
-    WrongKey = 2,
-    Job = job:create(Id, Command),
+    Job = job:create(Command),
+    WrongJob = job:create(Command),
     jd_store:insert(Db, Job),
-    ?assertEqual([], jd_store:lookup(Db, WrongKey)).
+    ?assertEqual([], jd_store:lookup(Db, WrongJob)).
 
 delete_stored_value_in_db_test() ->
     Db = jd_store:create(ball),
-    Id = 1,
     Command = "whatever",
-    Job = job:create(Id, Command),
+    Job = job:create(Command),
     jd_store:insert(Db, Job),
-    jd_store:delete(Db, Id),
-    ?assertEqual([], jd_store:lookup(Db, Id)).
+    jd_store:delete(Db, Job),
+    ?assertEqual([], jd_store:lookup(Db, Job)).

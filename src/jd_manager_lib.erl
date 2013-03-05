@@ -12,12 +12,8 @@ handle_job(Job) ->
 give_job_to_worker(Job) ->
     spawn(worker, execute_job, [Job]).
 
-give_job_to_worker(Job, JobId) ->
-    spawn(worker, execute_job, [Job, JobId]),
-    ok.
-
 is_someone_waiting_for_job(AwaitingJobStatusDb, Job) ->
-    case jd_store:lookup(AwaitingJobStatusDb, job:get_id(Job)) of
+    case jd_store:lookup(AwaitingJobStatusDb, Job) of
         [] ->
             false;
         _ ->
@@ -26,7 +22,7 @@ is_someone_waiting_for_job(AwaitingJobStatusDb, Job) ->
         
 
 is_job_executed(ExecutedJobsDb, Job) ->
-    case jd_store:lookup(ExecutedJobsDb, job:get_id(Job)) of
+    case jd_store:lookup(ExecutedJobsDb, Job) of
         [] ->
             false;
         _ ->

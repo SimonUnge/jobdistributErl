@@ -7,7 +7,7 @@
 execute_job(Job) ->
     JobPort = open_port({spawn, job:get_command(Job)}, [exit_status]),
     Result = get_job_result(JobPort),
-    return_result(Result, job:get_id(Job)),
+    return_result(Result, Job),
     ok.
 
 execute_job(Job, Id) ->
@@ -22,5 +22,5 @@ get_job_result(JobPort) ->
             Status
     end.
 
-return_result(Result, Id) ->
-    jd_manager:job_result(Result, Id).
+return_result(Result, Job) ->
+    jd_manager:job_result(job:set_status(Result, Job)).

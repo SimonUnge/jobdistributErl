@@ -7,7 +7,7 @@
          start_link/0
          ,give_job/1
          ,get_job_result/1
-         ,job_result/2
+         ,job_result/1
         ]).
 
 %% gen_server callbacks
@@ -28,11 +28,11 @@ start_link() ->
 give_job(Job) ->
     gen_server:call(?MODULE,{job,Job}).
 
-get_job_result(JobId) ->
-    gen_server:call(?MODULE, {get_job_result, JobId}).
+get_job_result(Job) ->
+    gen_server:call(?MODULE, {get_job_result, Job}).
 
-job_result(Status, JobId) ->
-    gen_server:cast(?MODULE,{job_status, {Status, JobId}}).
+job_result(Job) ->
+    gen_server:cast(?MODULE,{job_status, Job}).
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
@@ -47,24 +47,24 @@ init([]) ->
 handle_call({job, Job}, _From, State) ->
     Reply = jd_manager_lib:handle_job(Job),
     {reply, Reply, State};
-handle_call({get_job_result, JobId}, From, State) ->
-    case jd_manager_lib:is_job_executed(State#state.executed_jobs, JobId) of
+handle_call({get_job_result, Job}, From, State) ->
+    case jd_manager_lib:is_job_executed(State#state.executed_jobs, Job) of
         false ->
-            jd_store:insert(State#state.awaiting_job_status, JobId, From),
+            jd_store:insert(State#state.awaiting_job_status, Job, From),
             {noreply, State};
         true ->
-            Reply = jd_store:lookup(State#state.executed_jobs, JobId),
+            Reply = jd_store:lookup(State#state.executed_jobs, Job),
             {reply, Reply, State}
     end.
 
-handle_cast({job_status, {Status, JobId}}, State) ->
-    case jd_manager_lib:is_someone_waiting_for_job(State#state.awaiting_job_status, JobId) of
+handle_cast({job_status, Job}, State) ->
+    case jd_manager_lib:is_someone_waiting_for_job(State#state.awaiting_job_status, Job) of
         false ->
-            jd_store:insert(State#state.executed_jobs, JobId, Status);
+            jd_store:insert(State#state.executed_jobs, Job);
         true ->
-            From = jd_store:lookup(State#state.awaiting_job_status, JobId),
-            jd_store:delete(State#state.awaiting_job_status, JobId),
-            gen_server:reply(From, Status)
+            From = jd_store:lookup(State#state.awaiting_job_status, Job),
+            jd_store:delete(State#state.awaiting_job_status, Job),
+            gen_server:reply(From, job:get_status(Job))
     end,
     {noreply, State}.
 

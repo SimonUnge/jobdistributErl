@@ -32,34 +32,32 @@ groups() ->
 
 
 send_invalid_job_recv_error(_Config) ->
-    Id = 1,
     Command = not_a_string,
-    error = job:create(Id, Command).
+    error = job:create(Command).
 
 send_echo_job_recv_ok(_Config) ->
     Command = "echo hello",
-    Id = 2,
-    ok = jd_manager:give_job(job:create(Id, Command)).
+    ok = jd_manager:give_job(job:create(Command)).
 
 send_valid_job_and_ask_for_result(_Config) ->
     Command = "echo hello",
-    Id = 3,
+    Job = job:create(Command),
     SuccessStaus = 0,
-    ok = jd_manager:give_job(job:create(Id, Command)),
-    SuccessStaus = jd_manager:get_job_result(Id).
+    ok = jd_manager:give_job(Job),
+    SuccessStaus = jd_manager:get_job_result(Job).
 
 send_valid_long_job_and_ask_for_result(_Config) ->
     Command = "sleep 1",
-    Id = 4,
+    Job = job:create(Command),
     SuccessStaus = 0,
-    ok = jd_manager:give_job(job:create(Id, Command)),
-    SuccessStaus = jd_manager:get_job_result(Id).
+    ok = jd_manager:give_job(Job),
+    SuccessStaus = jd_manager:get_job_result(Job).
 
 send_invalid_job_and_ask_for_result(_Config) ->
     Command = "invalid_job",
-    Id = 5,
-    ok = jd_manager:give_job(job:create(Id, Command)),
-    0 =/= jd_manager:get_job_result(Id).
+    Job = job:create(Command),
+    ok = jd_manager:give_job(Job),
+    0 =/= jd_manager:get_job_result(Job).
 
 init_per_group(jd_give_job, Config) ->
     start_app_return_config(Config);
